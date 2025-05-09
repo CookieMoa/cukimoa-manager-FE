@@ -1,24 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
+import styled from "styled-components";
+import LoginPage from "./Login/LoginPage";
+import Header from "./Components/Header";
+import Menubar from "./Components/Menubar";
+
+import MainCafe from "./Cafe/MainCafe";
+import MainDashboard from "./Dashboard/MainDashboard";
+import MainUser from "./User/MainUser";
+import Layout from "./Components/Layout";
+
+const MainLayout = styled.div``;
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        {/* <Route path="login" element={<LoginPage />} /> */}
+        <Route path="/" element={<Layout />}>
+          <Route index element={<MainDashboard />} />
+          <Route path="cafe" element={<MainCafe />} />
+          <Route path="users" element={<MainUser />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 
