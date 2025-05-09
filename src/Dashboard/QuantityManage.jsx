@@ -13,11 +13,11 @@ const Wrapper = styled.div`
 `;
 const QunatityManage = () => {
   const titles = [
-    "이용자 수",
+    "가입자 수",
     "등록카페 수",
-    "쿠폰 수",
-    "오늘 접속자 수",
-    "누적 접속자 수",
+    "발급 쿠폰 수",
+    "사용 쿠폰 수",
+    "쿠폰 사용율",
   ];
   // const [data, setData] = useState([]);
   // useEffect(() => {

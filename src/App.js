@@ -9,7 +9,6 @@ import LoginPage from "./Login/LoginPage";
 import Header from "./Components/Header";
 import Menubar from "./Components/Menubar";
 
-
 import MainCafe from "./Cafe/MainCafe";
 import MainDashboard from "./Dashboard/MainDashboard";
 import MainUser from "./User/MainUser";
@@ -21,6 +20,7 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* <Route path="login" element={<LoginPage />} /> */}
         <Route path="/" element={<Layout />}>
           <Route index element={<MainDashboard />} />
           <Route path="cafe" element={<MainCafe />} />

@@ -3,7 +3,7 @@ import React from "react";
 import QuantityChange from "./QuantityChange";
 
 const QuantitiyConatier = styled.div`
-  background: #f5f5f5;
+  background: #ffffff;
   /* width: 220px; */
   flex: 1;
   border-radius: 18px;
@@ -32,7 +32,7 @@ const Quantity = ({ title, count, number }) => {
       <Title>{title}</Title>
       <NumWrapper>
         <Count>{count}</Count>
-        <QuantityChange value={number} />
+        {/* <QuantityChange value={number} /> */}
       </NumWrapper>
     </QuantitiyConatier>
   );
