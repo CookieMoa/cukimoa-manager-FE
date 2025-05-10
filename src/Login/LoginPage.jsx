@@ -66,27 +66,23 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const handleLogin = async () => {
+    console.log("함수실행됨");
     try {
-      console.log("ㄴㅁㅇㄹ");
       const response = await axios.post(`${API_URL}/auth/login`, {
-        username,
-        password,
+        username: username,
+        password: password,
       });
 
-      if (response.data.code === 200) {
+      if (response.data.code == "COMMON200") {
         console.log(response);
-        // const token = response.data.data.accessToken;
-        // const userId = response.data.data.userId;
-        // Save to localStorage
-        // localStorage.setItem("userId", userId);
-        // localStorage.setItem("accessToken", token);
-        // localStorage.setItem("token", token);
-        // // Redirect to AdminHome
-        // navigate("/home");
-        // } else if (response.data.code === 404) {
-        //   setError("이메일을 확인하세요.");
-        // } else if (response.data.code === 401) {
-        //   setError("비밀번호가 일치하지 않습니다.");
+        const { access, userId } = response.data.result;
+        localStorage.setItem("userId", userId);
+        localStorage.setItem("accessToken", access);
+        navigate("/");
+      } else if (response.data.code === 404) {
+        setError("이메일을 확인하세요.");
+      } else if (response.data.code === 401) {
+        setError("비밀번호가 일치하지 않습니다.");
       }
     } catch (err) {
       console.error(err);
@@ -110,7 +106,7 @@ const LoginPage = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         ></Inputbox>
-        <LoginButton onClick={handleLogin}>로그인ㅇ</LoginButton>
+        <LoginButton onClick={handleLogin}>로그인</LoginButton>
       </LoginForm>
     </Container>
   );
