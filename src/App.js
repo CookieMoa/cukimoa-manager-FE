@@ -10,6 +10,7 @@ import LoginPage from "./Login/LoginPage";
 import MainCafe from "./Cafe/MainCafe";
 import MainDashboard from "./Dashboard/MainDashboard";
 import MainUser from "./User/MainUser";
+import MainAI from "./AI/MainAI";
 import Layout from "./Components/Layout";
 import RequireAuth from "./Components/RequireAuth";
 
@@ -29,6 +30,7 @@ function App() {
           <Route index element={<MainDashboard />} />
           <Route path="cafe" element={<MainCafe />} />
           <Route path="users" element={<MainUser />} />
+          <Route path="ai" element={<MainAI />} />
         </Route>
       </Routes>
     </Router>

@@ -23,7 +23,7 @@ const MainDashboard = () => {
       <SecondLine>
         <NewCafes />
         <NewUsers />
-        <AIMornitors />
+        {/* <AIMornitors /> */}
       </SecondLine>
       <ThirdLine>
         <TimeMornitors />

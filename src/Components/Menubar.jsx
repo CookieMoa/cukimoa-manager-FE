@@ -1,15 +1,18 @@
 import React from "react";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 
 const Container = styled.div`
-  width: 150px;
+  width: 160px;
   height: 100vh;
   background-color: #555555;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-right: 5px;
+  padding-left: 10px;
 `;
 const CukimoaLogo = styled.img`
   width: 105px;
@@ -47,8 +50,22 @@ const MenuTitle = styled.div`
   display: flex;
   justify-content: center;
 `;
+const SignoutLogo = styled.img`
+  width: 14px;
+  height: 14px;
+  position: fixed;
+  bottom: 20px; // 아래에서 16px
+  left: 20px; // 왼쪽에서 16px
+  z-index: 999; // 다른 요소보다 위에 오도록 (선택적)
+`;
 
 const Menubar = () => {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("accessToken");
+    navigate("/login");
+  };
   return (
     <Container>
       <CukimoaLogo src="/images/menulogo.svg" />
@@ -70,6 +87,13 @@ const Menubar = () => {
           <MenuTitle>유저 관리</MenuTitle>
         </MenuItem>
       </StyledLink>
+      <StyledLink to="/ai">
+        <MenuItem>
+          <LogoImgs src="/images/ailogo.svg" />
+          <MenuTitle>AI 관리</MenuTitle>
+        </MenuItem>
+      </StyledLink>
+      <SignoutLogo src="/images/signout.svg" onClick={handleLogout} />
     </Container>
   );
 };

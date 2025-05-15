@@ -23,9 +23,9 @@ const RightContainer = () => {
       <Top>
         <TopStampCafes />
       </Top>
-      <Bottom>
+      {/* <Bottom>
         <CharContainer />
-      </Bottom>
+      </Bottom> */}
     </Container>
   );
 };

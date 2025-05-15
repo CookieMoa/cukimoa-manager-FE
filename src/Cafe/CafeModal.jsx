@@ -134,12 +134,36 @@ const DeleteButton = styled.button`
   }
 `;
 
+const keywordOptions = [
+  { value: "quiet", label: "조용한" },
+  { value: "study_friendly", label: "공부하기 좋은" },
+  { value: "power_outlets", label: "콘센트 많음" },
+  { value: "spacious", label: "넓은 공간" },
+  { value: "cozy", label: "아늑한 분위기" },
+  { value: "good_coffee", label: "커피 맛집" },
+  { value: "dessert", label: "디저트 맛집" },
+  { value: "instagrammable", label: "사진 찍기 좋은" },
+  { value: "pet_friendly", label: "반려동물 출입 가능" },
+  { value: "late_open", label: "늦게까지 영업" },
+];
+
 const CafeModal = ({ visible, onClose, cafe }) => {
+  // 1. 날짜 포맷 YYYY-MM-DD
+  const formattedDate = cafe.createdAt?.slice(0, 10); // "2025-05-04"
+
+  // 2. 리워드 수
+  const rewardCount = cafe.rewardList?.length || 0;
+
+  // 3. 사용률(rate) 계산 (소수점 첫째 자리까지)
+  const total = cafe.totalStampCount || 0;
+  const used = cafe.totalUsedStampCount || 0;
+  const rate = total === 0 ? 0 : ((used / total) * 100).toFixed(1);
+
   return (
     <ModalBackground>
       <ModalContainer>
         <Header>
-          <Title>아메아메</Title>
+          <Title>{cafe.name}</Title>
           <LogoImgs src="/images/x.svg" onClick={onClose} />
         </Header>
         <Contents>
@@ -147,39 +171,45 @@ const CafeModal = ({ visible, onClose, cafe }) => {
             <Header>
               <InfoTitle>메인 이미지</InfoTitle>
             </Header>
-            <ImageContainer src="./images/cafeameame.png" />
+            {cafe.imgUrl ? (
+              <ImageContainer src={cafe.imgUrl} />
+            ) : (
+              <InfoText>현재 카페 이미지가 없습니다</InfoText>
+            )}
             <InfoContainer>
               <Info>
                 <InfoTitle>ID</InfoTitle>
-                <InfoText>3</InfoText>
+                <InfoText>{cafe.cafeId}</InfoText>
               </Info>
               <Info>
                 <InfoTitle>리워드 수</InfoTitle>
-                <InfoText>3</InfoText>
+                <InfoText>{rewardCount}</InfoText>
               </Info>
               <Info>
                 <InfoTitle>등록일</InfoTitle>
-                <InfoText>2025.03.25</InfoText>
+                <InfoText>{formattedDate}</InfoText>
               </Info>
               <Info>
                 <InfoTitle>발급 쿠폰 수</InfoTitle>
-                <InfoText>500</InfoText>
+                <InfoText>{cafe.totalStampCount}</InfoText>
               </Info>
               <Info>
                 <InfoTitle>위치</InfoTitle>
-                <InfoText>수정구 복정동</InfoText>
+                <InfoText>{cafe.address}</InfoText>
               </Info>
               <Info>
                 <InfoTitle>사용 쿠폰 수</InfoTitle>
-                <InfoText>300</InfoText>
+                <InfoText>{cafe.totalUsedStampCount}</InfoText>
               </Info>
               <Info>
                 <InfoTitle>시간</InfoTitle>
-                <InfoText>9시 ~ 21시</InfoText>
+                <InfoText>
+                  {cafe.openTime} ~ {cafe.closeTime}
+                </InfoText>
               </Info>
               <Info>
                 <InfoTitle>쿠폰 사용율</InfoTitle>
-                <InfoText>60 %</InfoText>
+                <InfoText>{rate}</InfoText>
               </Info>
             </InfoContainer>
           </OneLine>
@@ -191,16 +221,19 @@ const CafeModal = ({ visible, onClose, cafe }) => {
             <Infos>
               <Info>
                 <InfoTitle>소개글</InfoTitle>
-                <InfoText>
-                  안녕하세요 카페 아메아메입니다. 아메아메와 아메제과는 같은
-                  매장입니다. 휘낭시에, 소금빵, 음료가 맛있는 카페입니다^.^
-                </InfoText>
+                <InfoText>{cafe.intro}</InfoText>
               </Info>
               <Info>
                 <InfoTitle>리워드</InfoTitle>
-                <InfoText>샷추가 10</InfoText>
-                <InfoText>케이크 30</InfoText>
-                <InfoText>휘낭시에 15</InfoText>
+                {cafe.rewardList && cafe.rewardList.length > 0 ? (
+                  cafe.rewardList.map((reward) => (
+                    <InfoText key={reward.stampRewardId}>
+                      {reward.reward} {reward.stampCount}
+                    </InfoText>
+                  ))
+                ) : (
+                  <InfoText>현재 리워드가 없습니다</InfoText>
+                )}
               </Info>
             </Infos>
           </SecondLine>
@@ -208,18 +241,31 @@ const CafeModal = ({ visible, onClose, cafe }) => {
             <Header>
               <InfoTitle>광고</InfoTitle>
             </Header>
-            <ImageContainer src="/images/cafead.png" />
+            {cafe.advImgUrl ? (
+              <ImageContainer src={cafe.advImgUrl} alt="광고 이미지" />
+            ) : (
+              <InfoText>현재 광고 이미지가 없습니다</InfoText>
+            )}
             <Infos>
               <InfoTitle>카페 특성</InfoTitle>
               <TagList>
-                <Tag># 조용한</Tag>
-                <Tag># 음악이 좋은</Tag>
-                <Tag># 집중이 잘 되는</Tag>
+                {cafe.keywordList.length > 0 ? (
+                  cafe.keywordList.map((k) => {
+                    const match = keywordOptions.find(
+                      (opt) => opt.value === k.name
+                    );
+                    return match ? (
+                      <Tag key={k.keywordId}># {match.label}</Tag>
+                    ) : null;
+                  })
+                ) : (
+                  <Tag>카페 특성이 없습니다</Tag>
+                )}
               </TagList>
             </Infos>
           </ThirdLine>
         </Contents>
-        <DeleteButton>카페 삭제</DeleteButton>
+        <DeleteButton>카페 정지</DeleteButton>
       </ModalContainer>
     </ModalBackground>
   );

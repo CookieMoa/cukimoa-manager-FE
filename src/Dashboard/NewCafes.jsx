@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -43,8 +43,8 @@ const Cafes = styled.div`
 `;
 
 const CafeContainer = styled.div`
-  width: 130px;
-  height: 150px;
+  width: 180px;
+  height: 160px;
   border-radius: 15px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   flex-shrink: 0;
@@ -77,55 +77,78 @@ const CafeInfo = styled.div`
 `;
 
 const NewCafes = () => {
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const getDatas = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+          //  return navigation.replace("LoginScreen");
+          console.log("no token");
+        }
+        const response = await axios.get(`${API_URL}/admin/recent-cafe`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log(response.data.data);
+        if (response.data.code == "COMMON200") {
+          setData(response.data.result.cafeList);
+          console.log("최근 카페 목록", data);
+        } else {
+          // setCachedData([]);
+        }
+      } catch (error) {
+        console.error("에러 발생:", error);
+      }
+    };
+    getDatas();
+  }, []);
+  const getDaysAgo = (dateString) => {
+    const givenDate = new Date(dateString);
+    const today = new Date();
+
+    // 시, 분, 초 제거 (날짜 비교용)
+    const given = new Date(
+      givenDate.getFullYear(),
+      givenDate.getMonth(),
+      givenDate.getDate()
+    );
+    const now = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    );
+
+    const diffTime = now.getTime() - given.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) return "오늘";
+    return `${diffDays}일 전`;
+  };
+
   return (
     <Container>
       <Title>신규 추가 카페</Title>
       <Cafes>
-        <CafeContainer>
-          <ImageContainer>
-            <img src="/images/cafeameame.png" />
-          </ImageContainer>
-          <CafeInfoContainer>
-            <CafeName>아메아메</CafeName>
-            <CafeInfo>수정구 · 오늘</CafeInfo>
-          </CafeInfoContainer>
-        </CafeContainer>
-        <CafeContainer>
-          <ImageContainer>
-            <img src="/images/cafeameame.png" />
-          </ImageContainer>
-          <CafeInfoContainer>
-            <CafeName>아메아메</CafeName>
-            <CafeInfo>수정구 · 오늘</CafeInfo>
-          </CafeInfoContainer>
-        </CafeContainer>
-        <CafeContainer>
-          <ImageContainer>
-            <img src="/images/cafeameame.png" />
-          </ImageContainer>
-          <CafeInfoContainer>
-            <CafeName>아메아메</CafeName>
-            <CafeInfo>수정구 · 오늘</CafeInfo>
-          </CafeInfoContainer>
-        </CafeContainer>
-        <CafeContainer>
-          <ImageContainer>
-            <img src="/images/cafeameame.png" />
-          </ImageContainer>
-          <CafeInfoContainer>
-            <CafeName>아메아메</CafeName>
-            <CafeInfo>수정구 · 오늘</CafeInfo>
-          </CafeInfoContainer>
-        </CafeContainer>
-        <CafeContainer>
-          <ImageContainer>
-            <img src="/images/cafeameame.png" />
-          </ImageContainer>
-          <CafeInfoContainer>
-            <CafeName>아메아메</CafeName>
-            <CafeInfo>수정구 · 오늘</CafeInfo>
-          </CafeInfoContainer>
-        </CafeContainer>
+        {data.map((cafe) => {
+          const addressParts = cafe.address.split(" ");
+          const region = addressParts.slice(0, 2).join(" "); // "서울 성동구"
+
+          return (
+            <CafeContainer key={cafe.cafeId}>
+              <ImageContainer>
+                <img src={cafe.imgUrl} alt={cafe.name} />
+              </ImageContainer>
+              <CafeInfoContainer>
+                <CafeName>{cafe.name}</CafeName>
+                <CafeInfo>
+                  {region} · {getDaysAgo(cafe.createdAt)}
+                </CafeInfo>
+              </CafeInfoContainer>
+            </CafeContainer>
+          );
+        })}
       </Cafes>
     </Container>
   );

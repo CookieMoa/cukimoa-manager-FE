@@ -1,6 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+const API_URL = process.env.REACT_APP_API_URL;
+
 import UserModal from "./UserModal";
 
 const Container = styled.div`
@@ -84,162 +87,6 @@ const Tr = styled.tr`
   }
 `;
 
-const data = [
-  {
-    id: 1,
-    name: "카페라떼",
-    date: "2025.01.10",
-    rewards: 5,
-    issued: 800,
-    used: 640,
-    rate: "80%",
-  },
-  {
-    id: 2,
-    name: "카페모카",
-    date: "2025.02.18",
-    rewards: 4,
-    issued: 600,
-    used: 420,
-    rate: "70%",
-  },
-  {
-    id: 3,
-    name: "아메아메",
-    date: "2025.03.25",
-    rewards: 3,
-    issued: 500,
-    used: 300,
-    rate: "60%",
-  },
-  {
-    id: 4,
-    name: "바닐라빈",
-    date: "2025.03.30",
-    rewards: 2,
-    issued: 400,
-    used: 100,
-    rate: "25%",
-  },
-  {
-    id: 5,
-    name: "에스프레소잇",
-    date: "2025.04.05",
-    rewards: 6,
-    issued: 700,
-    used: 630,
-    rate: "90%",
-  },
-  {
-    id: 6,
-    name: "드립앤립",
-    date: "2025.04.15",
-    rewards: 4,
-    issued: 450,
-    used: 200,
-    rate: "44%",
-  },
-  {
-    id: 7,
-    name: "소이라떼",
-    date: "2025.04.21",
-    rewards: 3,
-    issued: 550,
-    used: 330,
-    rate: "60%",
-  },
-  {
-    id: 8,
-    name: "밤부커피",
-    date: "2025.04.25",
-    rewards: 5,
-    issued: 650,
-    used: 600,
-    rate: "92%",
-  },
-  {
-    id: 8,
-    name: "밤부커피",
-    date: "2025.04.25",
-    rewards: 5,
-    issued: 650,
-    used: 600,
-    rate: "92%",
-  },
-  {
-    id: 8,
-    name: "밤부커피",
-    date: "2025.04.25",
-    rewards: 5,
-    issued: 650,
-    used: 600,
-    rate: "92%",
-  },
-  {
-    id: 8,
-    name: "밤부커피",
-    date: "2025.04.25",
-    rewards: 5,
-    issued: 650,
-    used: 600,
-    rate: "92%",
-  },
-  {
-    id: 8,
-    name: "밤부커피",
-    date: "2025.04.25",
-    rewards: 5,
-    issued: 650,
-    used: 600,
-    rate: "92%",
-  },
-  {
-    id: 8,
-    name: "밤부커피",
-    date: "2025.04.25",
-    rewards: 5,
-    issued: 650,
-    used: 600,
-    rate: "92%",
-  },
-  {
-    id: 8,
-    name: "밤부커피",
-    date: "2025.04.25",
-    rewards: 5,
-    issued: 650,
-    used: 600,
-    rate: "92%",
-  },
-  {
-    id: 8,
-    name: "밤부커피",
-    date: "2025.04.25",
-    rewards: 5,
-    issued: 650,
-    used: 600,
-    rate: "92%",
-  },
-  {
-    id: 8,
-    name: "밤부커피",
-    date: "2025.04.25",
-    rewards: 5,
-    issued: 650,
-    used: 600,
-    rate: "92%",
-  },
-  {
-    id: 8,
-    name: "밤부커피",
-    date: "2025.04.25",
-    rewards: 5,
-    issued: 650,
-    used: 600,
-    rate: "92%",
-  },
-];
-
 const SearchIcon = styled.img``;
 
 const RegisterUsers = () => {
@@ -256,13 +103,58 @@ const RegisterUsers = () => {
     setSelectedCafe(null);
   };
 
+  const [data, setData] = useState([]);
+  const [keyword, setKeyword] = useState(""); // 입력값
+  const [debouncedKeyword, setDebouncedKeyword] = useState(""); // 디바운스된 값
+
+  // 데이터 fetch 함수
+  const fetchCafes = async (searchKeyword = "") => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) return;
+
+      const response = await axios.get(
+        `${API_URL}/admin/all/user${
+          searchKeyword ? `?keyword=${searchKeyword}` : ""
+        }`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.data.code === "COMMON200") {
+        setData(response.data.result.userList);
+      }
+    } catch (err) {
+      console.error("유저 불러오기 실패", err);
+    }
+  };
+
+  // 1. 첫 마운트에 전체 카페 불러오기
+  useEffect(() => {
+    fetchCafes();
+  }, []);
+
+  // 2. keyword가 바뀔 때마다 디바운스 걸어서 자동 검색
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchCafes(keyword);
+    }, 500); // 0.5초 기다렸다 실행
+
+    return () => clearTimeout(timer); // keyword 바뀌면 기존 타이머 삭제
+  }, [keyword]);
+
   return (
     <Container>
       <Header>
         <Title>등록 카페</Title>
 
         <SearchBox>
-          <SearchInput />
+          <SearchInput
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            placeholder="유저 이름 검색"
+          />
           <SearchIcon src="/images/search.svg" />
         </SearchBox>
       </Header>
@@ -280,13 +172,14 @@ const RegisterUsers = () => {
             </Tr>
           </thead>
           <tbody>
-            {data.map((item, idx) => (
+            {/* {data.map((item, idx) => (
+              
               <Tr
                 key={idx}
                 onClick={() => handleRowClick(item)}
                 style={{ cursor: "pointer" }}
               >
-                <Td>{item.id}</Td>
+                <Td>{item.customerId}</Td>
                 <Td>{item.name}</Td>
                 <Td>{item.date}</Td>
                 <Td>{item.rewards}</Td>
@@ -294,7 +187,27 @@ const RegisterUsers = () => {
                 <Td>{item.used}</Td>
                 <Td>{item.rate}</Td>
               </Tr>
-            ))}
+            ))} */}
+            {data.map((item, idx) => {
+              // 1. 날짜 포맷 YYYY-MM-DD
+              const formattedDate = item.createdAt?.slice(0, 10); // "2025-05-04"
+              const nowStamp = item.totalStampCount - item.totalUsedStampCount
+              return (
+                <Tr
+                  key={idx}
+                  onClick={() => handleRowClick(item)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <Td>{item.customerId}</Td>
+                  <Td>{item.name}</Td>
+                  <Td>{formattedDate}</Td>
+                  <Td>{item.visitedCafeCount}</Td>
+                  <Td>{nowStamp}</Td>
+                  <Td>{item.totalUsedStampCount}</Td>
+                  <Td>{item.totalStampCount}</Td>
+                </Tr>
+              );
+            })}
           </tbody>
         </Table>
       </TableContainer>

@@ -10,6 +10,9 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import axios from "axios";
+const API_URL = process.env.REACT_APP_API_URL;
+import { useState, useEffect } from "react";
 
 ChartJS.register(
   LineElement,
@@ -42,36 +45,53 @@ const ChartWrapper = styled.div`
 `;
 
 const TimeMornitors = () => {
+  const [countsByHour, setCountsByHour] = useState(new Array(24).fill(0));
+
+  useEffect(() => {
+    const getDatas = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+          //  return navigation.replace("LoginScreen");
+          console.log("no token");
+        }
+        const response = await axios.get(
+          `${API_URL}/admin/stamp-transactions`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(response.data.data);
+        if (response.data.code == "COMMON200") {
+          const list = response.data.result.stampTransactionList; // <- 이거!
+          const tempArray = Array(24).fill(0);
+
+          console.log("리스트:", list);
+          list.forEach(({ hour, count }) => {
+            tempArray[hour] = count;
+          });
+
+          setCountsByHour(tempArray);
+        } else {
+          // setCachedData([]);
+        }
+      } catch (error) {
+        console.error("에러 발생:", error);
+      }
+    };
+    getDatas();
+  }, []);
+
+  const labels = Array.from({ length: 24 }, (_, i) => `${(i + 2) % 24}시`);
+  const shiftedData = [...countsByHour.slice(2), ...countsByHour.slice(0, 2)];
+
   const data = {
-    labels: [
-      "2시",
-      "3시",
-      "4시",
-      "5시",
-      "6시",
-      "7시",
-      "8시",
-      "9시",
-      "10시",
-      "11시",
-      "12시",
-      "13시",
-      "14시",
-      "15시",
-      "16시",
-      "17시",
-      "18시",
-      "19시",
-      "20시",
-      "21시",
-      "22시",
-      "23시",
-      "24시",
-      "1시",
-    ],
+    labels,
     datasets: [
       {
-        data: [100, 120, 150, 90, 80, 70, 110, 130, 160, 190, 200, 22, 80],
+        data: shiftedData,
         borderColor: "#D2B896",
         tension: 0,
       },
@@ -97,7 +117,8 @@ const TimeMornitors = () => {
           color: "#f0f0f0",
         },
         ticks: {
-          stepSize: 50,
+          stepSize: 1,
+          beginAtZero: true,
         },
       },
     },
@@ -105,7 +126,7 @@ const TimeMornitors = () => {
 
   return (
     <Container>
-      <Title>시간대별 스탬프 거래수</Title>
+      <Title>시간대별 스탬프 거래 횟수</Title>
       <ChartWrapper>
         <Line data={data} options={options} />
       </ChartWrapper>

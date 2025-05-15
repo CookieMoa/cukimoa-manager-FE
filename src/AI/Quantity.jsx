@@ -1,10 +1,8 @@
 import styled from "styled-components";
 import React from "react";
-import QuantityChange from "./QuantityChange";
 
 const QuantitiyConatier = styled.div`
   background: #ffffff;
-  /* width: 220px; */
   flex: 1;
   border-radius: 18px;
   border: 1px solid #eeeeee;
@@ -31,8 +29,10 @@ const Quantity = ({ title, count, number }) => {
     <QuantitiyConatier>
       <Title>{title}</Title>
       <NumWrapper>
-        <Count>{title === "쿠폰 사용율" ? `${count} %` : count}</Count>
-        {/* <QuantityChange value={number} /> */}
+        <Count>
+          {/* {title === "이전 모델 대비 성능 향상률" ? `${count} %` : count} */}
+          {count}
+        </Count>
       </NumWrapper>
     </QuantitiyConatier>
   );

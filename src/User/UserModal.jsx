@@ -180,40 +180,56 @@ const Td = styled.td`
 const Tr = styled.tr`
   display: flex;
   justify-content: space-between;
-  &:nth-child(even) {
+  &:nth-child(odd) {
     background-color: #f5f5f5;
   }
 `;
 
-const data = [
-  {
-    review: "존나맛있다",
-    time: "25.03",
-  },
-  {
-    review: "존나맛있다",
-    time: "25.03",
-  },
-  {
-    review: "존나맛있다",
-    time: "25.03",
-  },
-  {
-    review: "존나맛있다",
-    time: "25.03",
-  },
-  {
-    review: "존나맛있다",
-    time: "25.03",
-  },
+const keywordOptions = [
+  { value: "quiet", label: "조용한" },
+  { value: "study_friendly", label: "공부하기 좋은" },
+  { value: "power_outlets", label: "콘센트 많음" },
+  { value: "spacious", label: "넓은 공간" },
+  { value: "cozy", label: "아늑한 분위기" },
+  { value: "good_coffee", label: "커피 맛집" },
+  { value: "dessert", label: "디저트 맛집" },
+  { value: "instagrammable", label: "사진 찍기 좋은" },
+  { value: "pet_friendly", label: "반려동물 출입 가능" },
+  { value: "late_open", label: "늦게까지 영업" },
 ];
 
+// const data = [
+//   {
+//     review: "존나맛있다",
+//     time: "25.03",
+//   },
+//   {
+//     review: "존나맛있다",
+//     time: "25.03",
+//   },
+//   {
+//     review: "존나맛있다",
+//     time: "25.03",
+//   },
+//   {
+//     review: "존나맛있다",
+//     time: "25.03",
+//   },
+//   {
+//     review: "존나맛있다",
+//     time: "25.03",
+//   },
+// ];
+
 const UserModal = ({ visible, onClose, cafe }) => {
+  const formattedDate = cafe.createdAt?.slice(0, 10); // "2025-05-04"
+  const nowStamp = cafe.totalStampCount - cafe.totalUsedStampCount;
+  console.log(cafe.reviewList);
   return (
     <ModalBackground>
       <ModalContainer>
         <Header>
-          <Title>아메아메</Title>
+          <Title>{cafe.name}</Title>
           <LogoImgs src="/images/x.svg" onClick={onClose} />
         </Header>
         <Contents>
@@ -221,45 +237,52 @@ const UserModal = ({ visible, onClose, cafe }) => {
             <Header>
               <InfoTitle>프로필 이미지</InfoTitle>
             </Header>
-            <ImageContainer src="./images/cafeameame.png" />
+            <ImageContainer src={cafe.imgUrl} />
           </OneLine>
           <SecondLine>
             <InfoContainer>
               <Info>
                 <InfoTitle>ID</InfoTitle>
-                <InfoText>3</InfoText>
+                <InfoText>{cafe.customerId}</InfoText>
               </Info>
               <Info>
                 <InfoTitle>가입일</InfoTitle>
-                <InfoText>2025.03.25</InfoText>
+                <InfoText>{formattedDate}</InfoText>
               </Info>
               <Info>
                 <InfoTitle>이메일</InfoTitle>
-                <InfoText>cukimoa@gmail.com</InfoText>
+                <InfoText>{cafe.email}</InfoText>
               </Info>
               <Info>
                 <InfoTitle>이용 카페 수</InfoTitle>
-                <InfoText>511</InfoText>
+                <InfoText>{cafe.visitedCafeCount}</InfoText>
               </Info>
               <Info>
                 <InfoTitle>보유 쿠폰 수</InfoTitle>
-                <InfoText>500</InfoText>
+                <InfoText>{nowStamp}</InfoText>
               </Info>
               <Info>
                 <InfoTitle>사용 쿠폰 수</InfoTitle>
-                <InfoText>300</InfoText>
+                <InfoText>{cafe.totalUsedStampCount}</InfoText>
               </Info>
               <Info>
                 <InfoTitle>누적 쿠폰 수</InfoTitle>
-                <InfoText>300</InfoText>
+                <InfoText>{cafe.totalStampCount}</InfoText>
               </Info>
               <Info>
                 <InfoTitle>선호 특성</InfoTitle>
-                <TagList>
-                  <Tag># 조용한</Tag>
-                  <Tag># 음악이 좋은</Tag>
-                  <Tag># 집중이 잘 되는</Tag>
-                </TagList>
+                {cafe.keywordList.length > 0 ? (
+                  cafe.keywordList.map((k) => {
+                    const match = keywordOptions.find(
+                      (opt) => opt.value === k.name
+                    );
+                    return match ? (
+                      <Tag key={k.keywordId}># {match.label}</Tag>
+                    ) : null;
+                  })
+                ) : (
+                  <Tag>선호 특성이 없습니다</Tag>
+                )}
               </Info>
             </InfoContainer>
           </SecondLine>
@@ -269,14 +292,14 @@ const UserModal = ({ visible, onClose, cafe }) => {
             </Header>
             <TableContainer>
               <Table>
-                <tbody>
+                {/* <tbody>
                   {data.map((item, idx) => (
                     <Tr key={idx}>
                       <Td>{item.review}</Td>
                       <Td>{item.time}</Td>
                     </Tr>
                   ))}
-                </tbody>
+                </tbody> */}
               </Table>
             </TableContainer>
             <Header>
@@ -285,18 +308,25 @@ const UserModal = ({ visible, onClose, cafe }) => {
             <TableContainer>
               <Table>
                 <tbody>
-                  {data.map((item, idx) => (
-                    <Tr key={idx}>
-                      <Td>{item.review}</Td>
-                      <Td>{item.time}</Td>
+                  {cafe.reviewList.length > 0 ? (
+                    cafe.reviewList.map((item) => (
+                      <Tr key={item.reviewId}>
+                        <Td>{item.content}</Td> {/* 리뷰 내용 */}
+                        <Td>{item.createdAt.split(" ")[0]}</Td>{" "}
+                        {/* 날짜만 추출 */}
+                      </Tr>
+                    ))
+                  ) : (
+                    <Tr>
+                      <Td colSpan={1}>작성한 리뷰가 없습니다</Td>
                     </Tr>
-                  ))}
+                  )}
                 </tbody>
               </Table>
             </TableContainer>
           </ThirdLine>
         </Contents>
-        <DeleteButton>유저 삭제</DeleteButton>
+        <DeleteButton>유저 정지</DeleteButton>
       </ModalContainer>
     </ModalBackground>
   );

@@ -1,10 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 
+import { useState, useEffect } from "react";
+import axios from "axios";
+const API_URL = process.env.REACT_APP_API_URL;
+
 const Container = styled.div`
   background-color: #ffffff;
   border-radius: 16px;
-  height: 40vh; // 화면 높이의 50%로 설정
   overflow-y: auto; // 내용이 넘칠 경우 세로 스크롤을 추가
 `;
 const Header = styled.div`
@@ -72,44 +75,37 @@ const Tr = styled.tr`
   }
 `;
 
-const data = [
-  {
-    name: "밤부커피",
-    issued: 650,
-  },
-  {
-    name: "밤부커피",
-    issued: 650,
-  },
-  {
-    name: "밤부커피",
-    issued: 650,
-  },
-  {
-    name: "밤부커피",
-    issued: 650,
-  },
-  {
-    name: "밤부커피",
-    issued: 650,
-  },
-  {
-    name: "밤부커피",
-    issued: 650,
-  },
-  {
-    name: "소이라떼",
-    issued: 550,
-  },
-  {
-    name: "밤부커피",
-    issued: 650,
-  },
-];
-
 const SearchIcon = styled.img``;
 
 const TopStampCafes = () => {
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const getDatas = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+          //  return navigation.replace("LoginScreen");
+          console.log("no token");
+        }
+        const response = await axios.get(`${API_URL}/admin/cafe/rank`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log(response.data.data);
+        if (response.data.code == "COMMON200") {
+          setData(response.data.result.issue);
+          console.log("최근 카페 목록", data);
+        } else {
+          // setCachedData([]);
+        }
+      } catch (error) {
+        console.error("에러 발생:", error);
+      }
+    };
+    getDatas();
+  }, []);
+
   return (
     <Container>
       <Header>
@@ -128,7 +124,7 @@ const TopStampCafes = () => {
             {data.map((item, idx) => (
               <Tr key={idx}>
                 <Td>{item.name}</Td>
-                <Td>{item.issued}</Td>
+                <Td>{item.totalStampCount}</Td>
               </Tr>
             ))}
           </tbody>

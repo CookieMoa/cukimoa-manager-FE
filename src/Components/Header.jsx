@@ -26,6 +26,8 @@ const Header = () => {
         return "카페 관리";
       case "/users":
         return "유저 관리";
+      case "/ai":
+        return "AI 관리";
       default:
         return ""; // 혹은 "페이지 없음"
     }
