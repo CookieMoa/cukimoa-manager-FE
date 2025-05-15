@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import CharContainer from "./ChartContainer";
 import TopStampCafes from "./TopStampCafes";
+import TopUsedStampCafes from "./TopUsedStampCafes";
 
 const Container = styled.div`
   display: flex;
@@ -23,9 +24,10 @@ const RightContainer = () => {
       <Top>
         <TopStampCafes />
       </Top>
-      {/* <Bottom>
-        <CharContainer />
-      </Bottom> */}
+      <Bottom>
+        {/* <CharContainer /> */}
+        <TopUsedStampCafes />
+      </Bottom>
     </Container>
   );
 };

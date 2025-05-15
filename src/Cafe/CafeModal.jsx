@@ -1,6 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 
+import { useState, useEffect } from "react";
+import axios from "axios";
+const API_URL = process.env.REACT_APP_API_URL;
+
 const ModalBackground = styled.div`
   position: absolute;
   top: 0;
@@ -159,6 +163,59 @@ const CafeModal = ({ visible, onClose, cafe }) => {
   const used = cafe.totalUsedStampCount || 0;
   const rate = total === 0 ? 0 : ((used / total) * 100).toFixed(1);
 
+  const [cafeState, setCafeState] = useState(cafe.accountStatus);
+
+  const handleCafeUnlock = async (userId) => {
+    console.log("userId", userId);
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        //  return navigation.replace("LoginScreen");
+        console.log("no token");
+      }
+      const response = await axios.patch(
+        `${API_URL}/admin/cafe/unlock/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data.data);
+      if (response.data.code == "COMMON200") {
+        console.log("락 해제됨");
+        setCafeState("ACTIVE");
+      }
+    } catch (error) {
+      console.error("에러 발생:", error);
+    }
+  };
+  const handleCafeLock = async (userId) => {
+    console.log("userId", userId);
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        //  return navigation.replace("LoginScreen");
+        console.log("no token");
+      }
+      const response = await axios.patch(
+        `${API_URL}/admin/cafe/lock/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data.data);
+      if (response.data.code == "COMMON200") {
+        console.log("락 됨");
+        setCafeState("LOCKED");
+      }
+    } catch (error) {
+      console.error("에러 발생:", error);
+    }
+  };
+
   return (
     <ModalBackground>
       <ModalContainer>
@@ -265,7 +322,15 @@ const CafeModal = ({ visible, onClose, cafe }) => {
             </Infos>
           </ThirdLine>
         </Contents>
-        <DeleteButton>카페 정지</DeleteButton>
+        <DeleteButton
+          onClick={() =>
+            cafeState === "LOCKED"
+              ? handleCafeUnlock(cafe.cafeId)
+              : handleCafeLock(cafe.cafeId)
+          }
+        >
+          {cafeState === "LOCKED" ? "정지 해제" : "카페 정지"}
+        </DeleteButton>
       </ModalContainer>
     </ModalBackground>
   );

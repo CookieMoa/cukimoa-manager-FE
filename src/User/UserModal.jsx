@@ -1,6 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 
+import { useState, useEffect } from "react";
+import axios from "axios";
+const API_URL = process.env.REACT_APP_API_URL;
+
 const ModalBackground = styled.div`
   position: absolute;
   top: 0;
@@ -198,33 +202,62 @@ const keywordOptions = [
   { value: "late_open", label: "늦게까지 영업" },
 ];
 
-// const data = [
-//   {
-//     review: "존나맛있다",
-//     time: "25.03",
-//   },
-//   {
-//     review: "존나맛있다",
-//     time: "25.03",
-//   },
-//   {
-//     review: "존나맛있다",
-//     time: "25.03",
-//   },
-//   {
-//     review: "존나맛있다",
-//     time: "25.03",
-//   },
-//   {
-//     review: "존나맛있다",
-//     time: "25.03",
-//   },
-// ];
-
 const UserModal = ({ visible, onClose, cafe }) => {
   const formattedDate = cafe.createdAt?.slice(0, 10); // "2025-05-04"
   const nowStamp = cafe.totalStampCount - cafe.totalUsedStampCount;
   console.log(cafe.reviewList);
+  const [userState, setUserState] = useState(cafe.accountStatus);
+
+  const handleUserUnlock = async (userId) => {
+    console.log("userId", userId);
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        //  return navigation.replace("LoginScreen");
+        console.log("no token");
+      }
+      const response = await axios.patch(
+        `${API_URL}/admin/user/unlock/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data.data);
+      if (response.data.code == "COMMON200") {
+        console.log("락 해제됨");
+        setUserState("ACTIVE");
+      }
+    } catch (error) {
+      console.error("에러 발생:", error);
+    }
+  };
+  const handleUserLock = async (userId) => {
+    console.log("userId", userId);
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        //  return navigation.replace("LoginScreen");
+        console.log("no token");
+      }
+      const response = await axios.patch(
+        `${API_URL}/admin/user/lock/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data.data);
+      if (response.data.code == "COMMON200") {
+        console.log("락 됨");
+        setUserState("LOCKED");
+      }
+    } catch (error) {
+      console.error("에러 발생:", error);
+    }
+  };
   return (
     <ModalBackground>
       <ModalContainer>
@@ -292,14 +325,21 @@ const UserModal = ({ visible, onClose, cafe }) => {
             </Header>
             <TableContainer>
               <Table>
-                {/* <tbody>
-                  {data.map((item, idx) => (
-                    <Tr key={idx}>
-                      <Td>{item.review}</Td>
-                      <Td>{item.time}</Td>
+                <tbody>
+                  {cafe.maliciousReviewList.length > 0 ? (
+                    cafe.maliciousReviewList.map((item) => (
+                      <Tr key={item.reviewId}>
+                        <Td>{item.content}</Td> {/* 리뷰 내용 */}
+                        <Td>{item.createdAt.split(" ")[0]}</Td>{" "}
+                        {/* 날짜만 추출 */}
+                      </Tr>
+                    ))
+                  ) : (
+                    <Tr>
+                      <Td colSpan={1}>작성한 악성 리뷰가 없습니다</Td>
                     </Tr>
-                  ))}
-                </tbody> */}
+                  )}
+                </tbody>
               </Table>
             </TableContainer>
             <Header>
@@ -326,7 +366,15 @@ const UserModal = ({ visible, onClose, cafe }) => {
             </TableContainer>
           </ThirdLine>
         </Contents>
-        <DeleteButton>유저 정지</DeleteButton>
+        <DeleteButton
+          onClick={() =>
+            userState === "LOCKED"
+              ? handleUserUnlock(cafe.customerId)
+              : handleUserLock(cafe.customerId)
+          }
+        >
+          {userState === "LOCKED" ? "정지 해제" : "유저 정지"}
+        </DeleteButton>
       </ModalContainer>
     </ModalBackground>
   );
