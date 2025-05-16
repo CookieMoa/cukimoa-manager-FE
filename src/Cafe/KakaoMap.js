@@ -1,19 +1,19 @@
 import React, { useEffect } from "react";
 
-const KakaoMap = () => {
+const KakaoMap = (cafe) => {
   useEffect(() => {
     const loadKakaoMap = () => {
       const container = document.getElementById("map");
+      const lat = cafe.cafe.latitude;
+      const lon = cafe.cafe.longitude;
       const options = {
-        center: new window.kakao.maps.LatLng(37.5665, 126.978), // 서울 중심 좌표
+        center: new window.kakao.maps.LatLng(lat, lon), // 서울 중심 좌표
         level: 3,
       };
       const map = new window.kakao.maps.Map(container, options);
 
       // 마커 좌표 배열 (이름 포함)
-      const markerPositions = [
-        { lat: 37.5665, lng: 126.978, title: "서울 시청" },
-      ];
+      const markerPositions = [{ lat: lat, lng: lon, title: cafe.cafe.name }];
 
       // 마커 및 인포윈도우 생성
       markerPositions.forEach((pos) => {
@@ -28,12 +28,12 @@ const KakaoMap = () => {
         });
 
         // 마커에 마우스를 올리면 인포윈도우 표시
-        window.kakao.maps.event.addListener(marker, 'mouseover', () => {
+        window.kakao.maps.event.addListener(marker, "mouseover", () => {
           infoWindow.open(map, marker);
         });
 
         // 마우스를 벗어나면 인포윈도우 닫기
-        window.kakao.maps.event.addListener(marker, 'mouseout', () => {
+        window.kakao.maps.event.addListener(marker, "mouseout", () => {
           infoWindow.close();
         });
       });
@@ -52,7 +52,9 @@ const KakaoMap = () => {
     }
   }, []);
 
-  return <div id="map" style={{ width: "100%", height: "100%", borderRadius: 20 }} />;
+  return (
+    <div id="map" style={{ width: "100%", height: "100%", borderRadius: 20 }} />
+  );
 };
 
 export default KakaoMap;

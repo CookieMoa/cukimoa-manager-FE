@@ -282,7 +282,7 @@ const CafeModal = ({ visible, onClose, cafe }) => {
               <InfoTitle>지도</InfoTitle>
             </Header>
             <Map>
-            <KakaoMap />
+              <KakaoMap cafe={cafe} />
             </Map>
             <Infos>
               <Info>
