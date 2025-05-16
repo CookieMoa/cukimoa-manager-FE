@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useState, useEffect } from "react";
 import axios from "axios";
 const API_URL = process.env.REACT_APP_API_URL;
+import KakaoMap from "./KakaoMap";
 
 const ModalBackground = styled.div`
   position: absolute;
@@ -136,6 +137,12 @@ const DeleteButton = styled.button`
     transform: scale(0.95);
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
   }
+`;
+
+const Map = styled.div`
+  margin-top: 5px;
+  height: 215px;
+  border-radius: 20px;
 `;
 
 const keywordOptions = [
@@ -274,7 +281,9 @@ const CafeModal = ({ visible, onClose, cafe }) => {
             <Header>
               <InfoTitle>지도</InfoTitle>
             </Header>
-            <ImageContainer src="/images/cafemap.png" />
+            <Map>
+            <KakaoMap />
+            </Map>
             <Infos>
               <Info>
                 <InfoTitle>소개글</InfoTitle>
