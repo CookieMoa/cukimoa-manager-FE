@@ -18,8 +18,8 @@ const LoginForm = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 900px;
-  height: 463px;
+  width: 1000px;
+  height: 450px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   border-radius: 50px;
   background-color: #fff;
@@ -68,6 +68,7 @@ const HeaderContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-bottom: 20px;
 `;
 
 const LeftContainer = styled.div`
@@ -87,12 +88,13 @@ const RightContainer = styled.div`
 `;
 
 const CafeImg = styled.img`
-  width: 320px;
+  width: 380px;
 `;
 const LoginTitle = styled.div`
   color: #957658;
   font-size: 30px;
   font-weight: 700;
+  margin-bottom: 20px;
 `;
 const MainTitle = styled.div`
   color: #fdf6ee;

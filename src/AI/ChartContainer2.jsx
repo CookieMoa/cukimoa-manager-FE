@@ -6,7 +6,7 @@ const Container = styled.div`
   width: 100%;
   background-color: #ffffff;
   border-radius: 16px;
-  height: 70vh; // 화면 높이의 50%로 설정
+  height: 530px; // 화면 높이의 50%로 설정
   overflow-y: auto; // 내용이 넘칠 경우 세로 스크롤을 추가
 `;
 const Header = styled.div`
