@@ -10,21 +10,24 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background-color: #e1d3c1;
+  flex-direction: column;
 `;
+
 const LoginForm = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
-  flex-direction: column;
-  width: 470px;
-  height: 390px;
+  justify-content: center;
+  width: 900px;
+  height: 463px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   border-radius: 50px;
-  gap: 15px;
+  background-color: #fff;
+  position: relative; /* CenterLine 기준 */
 `;
 
 const CukimoaLogo = styled.img`
-  width: 230px;
+  width: 300px;
   margin-bottom: 25px;
 `;
 const Inputbox = styled.input`
@@ -60,6 +63,53 @@ const LoginButton = styled.button`
   }
 `;
 
+const HeaderContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const LeftContainer = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const RightContainer = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+`;
+
+const CafeImg = styled.img`
+  width: 320px;
+`;
+const LoginTitle = styled.div`
+  color: #957658;
+  font-size: 30px;
+  font-weight: 700;
+`;
+const MainTitle = styled.div`
+  color: #fdf6ee;
+  font-size: 28px;
+  font-weight: 900;
+`;
+
+const CenterLine = styled.div`
+  width: 0.1px;
+  height: 90%;
+  background-color: #bcbcbc;
+  position: absolute;
+  left: 50%;
+  top: 5%;
+  transform: translateX(-50%);
+`;
+
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -92,21 +142,32 @@ const LoginPage = () => {
 
   return (
     <Container>
-      <LoginForm>
+      <HeaderContainer>
+        <MainTitle>관리자 페이지</MainTitle>
         <CukimoaLogo src="/images/mainlogo.svg" />
-        <Inputbox
-          placeholder="ID"
-          type="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        ></Inputbox>
-        <Inputbox
-          placeholder="PW"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        ></Inputbox>
-        <LoginButton onClick={handleLogin}>로그인</LoginButton>
+      </HeaderContainer>
+      <LoginForm>
+        <LeftContainer>
+          <CafeImg src="/images/mainimg.png" />
+        </LeftContainer>
+        <CenterLine />
+        <RightContainer>
+          {/**/}
+          <LoginTitle>관리자 로그인 페이지</LoginTitle>
+          <Inputbox
+            placeholder="ID"
+            type="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          ></Inputbox>
+          <Inputbox
+            placeholder="PW"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          ></Inputbox>
+          <LoginButton onClick={handleLogin}>로그인</LoginButton>
+        </RightContainer>
       </LoginForm>
     </Container>
   );

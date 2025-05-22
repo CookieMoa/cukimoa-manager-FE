@@ -50,7 +50,10 @@ const BarChart2 = () => {
     datasets: [
       {
         label: "키워드별 성능",
-        data: rawData.map((item) => item.performance),
+        data: rawData.map((item) =>
+          item.performance == 0 ? 0.1 : item.performance
+        ),
+
         backgroundColor: rawData.map(
           (_, i) =>
             ["#F28B82", "#B7E1CD", "#AECBFA", "#D7AEFB", "#FDD663"][i % 5]
@@ -83,6 +86,11 @@ const BarChart2 = () => {
     plugins: {
       legend: { display: false },
       tooltip: { enabled: true },
+    },
+    datasets: {
+      bar: {
+        minBarLength: 5,
+      },
     },
   };
 
