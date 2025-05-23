@@ -150,7 +150,7 @@ const LoginPage = () => {
       </HeaderContainer>
       <LoginForm>
         <LeftContainer>
-          <CafeImg src="/images/mainimg.png" />
+          <CafeImg src="/images/mainimg.webp" />
         </LeftContainer>
         <CenterLine />
         <RightContainer>
