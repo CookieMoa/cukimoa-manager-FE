@@ -143,7 +143,6 @@ const RegisterCafes = () => {
     return () => clearTimeout(timer); // keyword 바뀌면 기존 타이머 삭제
   }, [keyword]);
 
-
   return (
     <Container>
       <Header>
@@ -181,7 +180,8 @@ const RegisterCafes = () => {
               // 3. 사용률(rate) 계산 (소수점 첫째 자리까지)
               const total = item.totalStampCount || 0;
               const used = item.totalUsedStampCount || 0;
-              const rate = total === 0 ? 0 : ((used / total) * 100).toFixed(1);
+              const rate =
+                total === 0 ? 0 : Number(((used / total) * 100).toFixed(1));
 
               return (
                 <Tr
