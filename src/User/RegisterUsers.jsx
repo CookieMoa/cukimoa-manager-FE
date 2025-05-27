@@ -162,7 +162,7 @@ const RegisterUsers = () => {
         <Table>
           <thead>
             <Tr>
-              <Th>ID</Th>
+              {/* <Th>ID</Th> */}
               <Th>닉네임</Th>
               <Th>가입일</Th>
               <Th>이용 카페 수</Th>
@@ -198,7 +198,7 @@ const RegisterUsers = () => {
                   onClick={() => handleRowClick(item)}
                   style={{ cursor: "pointer" }}
                 >
-                  <Td>{item.customerId}</Td>
+                  {/* <Td>{item.customerId}</Td> */}
                   <Td>{item.name}</Td>
                   <Td>{formattedDate}</Td>
                   <Td>{item.visitedCafeCount}</Td>
