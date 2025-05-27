@@ -16,6 +16,25 @@ ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 const BarChart1 = () => {
   const [rawData, setRawData] = useState([]);
 
+  const keywordOptions = [
+    { value: "quiet", label: "조용한" },
+    { value: "study_friendly", label: "공부하기 좋은" },
+    { value: "power_outlets", label: "콘센트 많음" },
+    { value: "spacious", label: "넓은 공간" },
+    { value: "cozy", label: "아늑한 분위기" },
+    { value: "good_coffee", label: "커피 맛집" },
+    { value: "dessert", label: "디저트 맛집" },
+    { value: "instagrammable", label: "사진 찍기 좋은" },
+    { value: "pet_friendly", label: "반려동물 출입 가능" },
+    { value: "late_open", label: "늦게까지 영업" },
+  ];
+
+  // ✅ name → label 변환 함수
+  const getLabelFromValue = (value) => {
+    const found = keywordOptions.find((opt) => opt.value === value);
+    return found ? found.label : value; // 못 찾으면 원래 value 그대로
+  };
+
   useEffect(() => {
     const getDatas = async () => {
       try {
@@ -46,7 +65,7 @@ const BarChart1 = () => {
   }, []);
 
   const data = {
-    labels: rawData.map((item) => item.name),
+    labels: rawData.map((item) => getLabelFromValue(item.name)),
     datasets: [
       {
         label: "키워드별 리뷰",

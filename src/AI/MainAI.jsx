@@ -3,7 +3,6 @@ import styled from "styled-components";
 import QunatityManage from "./QuantityManage";
 import CharContainer1 from "./ChartContainer1";
 import CharContainer2 from "./ChartContainer2";
-import SettingAI from "./SettingAI";
 import SettingAI2 from "./SettingAI2";
 const Container = styled.div`
   display: flex;

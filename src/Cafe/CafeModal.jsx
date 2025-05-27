@@ -170,9 +170,12 @@ const CafeModal = ({ visible, onClose, cafe }) => {
   const used = cafe.totalUsedStampCount || 0;
   const rate = total === 0 ? 0 : ((used / total) * 100).toFixed(1);
 
-  const [cafeState, setCafeState] = useState(cafe.accountStatus);
+  const [cafeState, setCafeState] = useState(cafe.cafeStatus);
+  console.log("카페스테이트::", cafeState);
+  console.log("카페id::", cafe.cafeId);
 
   const handleCafeUnlock = async (userId) => {
+    console.log("불러는와짐 unlock이")
     console.log("userId", userId);
     try {
       const token = localStorage.getItem("accessToken");
@@ -199,6 +202,7 @@ const CafeModal = ({ visible, onClose, cafe }) => {
   };
   const handleCafeLock = async (userId) => {
     console.log("userId", userId);
+    console.log("불러는와짐 lock이")
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
