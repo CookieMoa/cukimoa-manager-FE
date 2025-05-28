@@ -207,6 +207,8 @@ const UserModal = ({ visible, onClose, cafe }) => {
   const nowStamp = cafe.totalStampCount - cafe.totalUsedStampCount;
   console.log(cafe.reviewList);
   const [userState, setUserState] = useState(cafe.accountStatus);
+  const [showAllTags, setShowAllTags] = useState(false);
+  const MAX_TAGS_TO_SHOW = 5;
 
   const handleUserUnlock = async (userId) => {
     console.log("userId", userId);
@@ -304,18 +306,20 @@ const UserModal = ({ visible, onClose, cafe }) => {
               </Info>
               <Info>
                 <InfoTitle>선호 특성</InfoTitle>
-                {cafe.keywordList.length > 0 ? (
-                  cafe.keywordList.map((k) => {
-                    const match = keywordOptions.find(
-                      (opt) => opt.value === k.name
-                    );
-                    return match ? (
-                      <Tag key={k.keywordId}># {match.label}</Tag>
-                    ) : null;
-                  })
-                ) : (
-                  <Tag>선호 특성이 없습니다</Tag>
-                )}
+                <TagList>
+                  {cafe.keywordList.length > 0 ? (
+                    cafe.keywordList.map((k) => {
+                      const match = keywordOptions.find(
+                        (opt) => opt.value === k.name
+                      );
+                      return match ? (
+                        <Tag key={k.keywordId}># {match.label}</Tag>
+                      ) : null;
+                    })
+                  ) : (
+                    <Tag>선호 특성이 없습니다</Tag>
+                  )}
+                </TagList>
               </Info>
             </InfoContainer>
           </SecondLine>
