@@ -7,20 +7,34 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 const Container = styled.div`
   flex: 2;
-  height: 200px;
   width: 100%;
   padding: 14px;
   border: 1px solid #f5f5f5;
   border-radius: 15px;
   background-color: #ffffff;
+  height: 240px; /* 전체 높이 */
+  box-sizing: border-box;
+`;
+
+const ScrollArea = styled.div`
+  height: 150px; /* 스크롤 영역 높이만 제한 */
   overflow-y: auto;
+  padding: 10px;
+
+  /* 스크롤바 감추기 (크로스 브라우저) */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE, Edge */
+
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
 `;
 const Title = styled.div`
   font-size: 14px;
   color: #bcbcbc;
   font-weight: 700;
   padding-top: 2px;
-  margin-bottom: 18px;
+  margin-bottom: 10px;
 `;
 const User = styled.div`
   height: 38px;
@@ -98,14 +112,16 @@ const NewUsers = () => {
   return (
     <Container>
       <Title>신규 가입 유저</Title>
-      {data.map((user) => {
-        return (
-          <User>
-            <UserName>{user.name}</UserName>
-            <Time>{getDaysAgo(user.createdAt)}</Time>
-          </User>
-        );
-      })}
+      <ScrollArea>
+        {data.map((user) => {
+          return (
+            <User>
+              <UserName>{user.name}</UserName>
+              <Time>{getDaysAgo(user.createdAt)}</Time>
+            </User>
+          );
+        })}
+      </ScrollArea>
     </Container>
   );
 };
