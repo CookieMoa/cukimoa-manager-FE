@@ -13,6 +13,7 @@ const Container = styled.div`
   border: 1px solid #f5f5f5;
   border-radius: 15px;
   background-color: #ffffff;
+  overflow-y: auto;
 `;
 const Title = styled.div`
   font-size: 14px;
