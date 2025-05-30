@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-
 const Container = styled.div`
   width: 160px;
   height: 100vh;
@@ -57,6 +56,12 @@ const SignoutLogo = styled.img`
   bottom: 20px; // 아래에서 16px
   left: 20px; // 왼쪽에서 16px
   z-index: 999; // 다른 요소보다 위에 오도록 (선택적)
+`;
+
+const PptLink = styled.div`
+  color: #ececec;
+  margin-left: 50px;
+  font-size: 10px;
 `;
 
 const Menubar = () => {

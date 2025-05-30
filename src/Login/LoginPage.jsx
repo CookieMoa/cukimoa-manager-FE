@@ -112,6 +112,12 @@ const CenterLine = styled.div`
   transform: translateX(-50%);
 `;
 
+const PptLink = styled.div`
+  color: #ececec;
+  margin-top: 30px;
+  font-size: 10px;
+`;
+
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -147,6 +153,7 @@ const LoginPage = () => {
       <HeaderContainer>
         <MainTitle>관리자 페이지</MainTitle>
         <CukimoaLogo src="/images/mainlogo.svg" />
+       
       </HeaderContainer>
       <LoginForm>
         <LeftContainer>
@@ -171,6 +178,9 @@ const LoginPage = () => {
           <LoginButton onClick={handleLogin}>로그인</LoginButton>
         </RightContainer>
       </LoginForm>
+      <PptLink>
+          https://www.figma.com/slides/9Obc3rOPw0F8SX3KTZCvOt/Untitled?node-id=38-702&t=8ADQcTXi78YliW1d-1
+        </PptLink>
     </Container>
   );
 };

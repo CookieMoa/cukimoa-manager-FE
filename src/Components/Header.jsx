@@ -15,6 +15,11 @@ const Title = styled.div`
   font-weight: bold;
   padding-left: 27px;
 `;
+const PptLink = styled.div`
+  color: #ececec;
+  margin-left: 50px;
+  font-size: 10px;
+`;
 
 const Header = () => {
   const location = useLocation();
@@ -35,6 +40,7 @@ const Header = () => {
   return (
     <Container>
       <Title>{getTitle()}</Title>
+      
     </Container>
   );
 };
